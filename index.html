@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="AutoWorldModel-Bench: A State-Centric Benchmark for Automated World-Model Research">
+  <meta name="keywords"
+    content="World Model, Game AI, Entity Component System, Benchmark, Dreamer, Transformer, Diffusion, MaskGIT, AI Benchmark">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AutoWorldModel-Bench</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <!-- Report-style-kit typography polish (layered over Bulma; layout untouched) -->
+  <style>
+    :root {
+      --sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, sans-serif;
+      --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+    }
+    html, body,
+    button, input, select, textarea,
+    .title, .subtitle, .publication-title,
+    .navbar, .footer, .content, p, li, td, th {
+      font-family: var(--sans);
+    }
+    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    .title, .subtitle, .publication-title { letter-spacing: -0.02em; }
+    code, pre, .mono, .metric-label, .caption code,
+    .headline-big, .headline-sub { font-family: var(--mono); }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero / Title -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">AutoWorldModel-<strong>Bench</strong></h1>
+            <h2 class="subtitle is-4" style="margin-top: -0.5rem;">
+              A Benchmark for Automated World Model Research on Structured Entity-Component State
+            </h2>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper (ArXiv)</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/electronicarts/AutoWorldModelBench" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/AutoWorldModel/AutoWorldModelBench" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <p style="font-size:20px">&#129303;</p>
+                    </span>
+                    <span>Dataset</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#table2" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <p style="font-size:20px">&#127942;</p>
+                    </span>
+                    <span>Benchmark Results</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              World modeling is an unsettled field: architectures, training objectives, and state representations interact in complex ways, and no single recipe dominates across environments. This makes it an ideal testbed for AI coding agents acting as autonomous researchers, a setting in which the improvement direction is not specified in advance, unlike the engineering-to-spec tasks that dominate current agent benchmarks. We introduce AutoWorldModel-Bench, a closed-loop benchmark in which frontier coding agents autonomously improve a provided world-model starter under a fixed compute budget. The benchmark spans eight game environments under a unified structured-state representation: ground-truth entity state extracted from each game and consumed through a shared tensor format, which isolates dynamics modeling from perception and enables minutes-per-run iteration. Across 64 sessions, Codex 5.4 and Opus 4.6 improve their starter on 63; in 91% of sessions, the winning edit is a non-trivial research-style modification, such as a new objective, representation, rollout procedure, or architectural change, rather than a hyperparameter tweak. WorldModel-Bench offers a setting in which frontier coding agents can be evaluated on open-ended research rather than engineering-to-spec problems.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Headline Cards -->
+  <section class="section" style="padding-top: 0.5rem;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Key Numbers</h2>
+      <!-- BEGIN: headline_cards -->
+<div class="columns is-multiline is-centered" style="margin-top: 0.5rem;">
+<div class="column is-one-fifth">
+  <div class="headline-card">
+    <div class="headline-big">63&nbsp;/&nbsp;64</div>
+    <div class="headline-title">Sessions improved</div>
+    <div class="headline-sub">paired test-score lift over the starter</div>
+  </div>
+</div>
+<div class="column is-one-fifth">
+  <div class="headline-card">
+    <div class="headline-big">+0.196</div>
+    <div class="headline-title">Mean $\Delta$ test score</div>
+    <div class="headline-sub">across 64 agent&times;starter&times;game sessions</div>
+  </div>
+</div>
+<div class="column is-one-fifth">
+  <div class="headline-card">
+    <div class="headline-big">+0.249</div>
+    <div class="headline-title">$\Delta$ at $h=20$</div>
+    <div class="headline-sub">long-horizon rollout gain (in-session)</div>
+  </div>
+</div>
+<div class="column is-one-fifth">
+  <div class="headline-card">
+    <div class="headline-big">91%</div>
+    <div class="headline-title">Non-trivial winners</div>
+    <div class="headline-sub">session winners that are new objectives, losses, rollouts or architectures (not hyperparameter tweaks)</div>
+  </div>
+</div>
+<div class="column is-one-fifth">
+  <div class="headline-card">
+    <div class="headline-big">1.8&times;</div>
+    <div class="headline-title">Token efficiency</div>
+    <div class="headline-sub">Codex is more token-efficient per unit $\Delta$ score</div>
+  </div>
+</div>
+</div>
+        <!-- END: headline_cards -->
+      <p class="caption" style="margin-top: 0.75rem;">See <a href="#table2">Main Results</a> for the per-session breakdown.</p>
+    </div>
+  </section>
+
+  <!-- Games Overview -->
+  <section class="section" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Games</h2>
+      <p class="has-text-centered" style="margin-bottom: 2rem;">
+        8 games with diverse entity dynamics, ranging from 5 to 52 entities per frame.
+      </p>
+      <div class="columns is-multiline is-centered">
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#128640;</div>
+            <h4>Asteroids</h4>
+            <p class="is-size-7">20 entities &middot; age, hp, size_class</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#129521;</div>
+            <h4>Breakout</h4>
+            <p class="is-size-7">52 entities &middot; col, hp, row</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#128056;</div>
+            <h4>Frogger</h4>
+            <p class="is-size-7">28 entities &middot; lane_type, reached</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#128053;</div>
+            <h4>Kong</h4>
+            <p class="is-size-7">16 entities</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#127939;</div>
+            <h4>Platformer</h4>
+            <p class="is-size-7">24 entities &middot; on_ground</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#127955;</div>
+            <h4>Pong</h4>
+            <p class="is-size-7">5 entities</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#128663;</div>
+            <h4>Racer</h4>
+            <p class="is-size-7">6 entities</p>
+          </div>
+        </div>
+        <div class="column is-3">
+          <div class="game-card">
+            <div class="game-icon">&#128013;</div>
+            <h4>Snake</h4>
+            <p class="is-size-7">48 entities &middot; direction, segment_index</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Preview -->
+  <section class="section" id="data-preview">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Data Preview</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        A sample episode from each game, rendered from the raw ECS state that ships in the dataset.
+        Pick a game to play its clip.
+      </p>
+      <!-- BEGIN: data_preview -->
+<div class="preview-gallery">
+  <div class="tabs is-centered is-toggle is-small">
+    <ul>
+      <li class="is-active"><a href="#" data-preview="asteroids">Asteroids</a></li>
+      <li class=""><a href="#" data-preview="breakout">Breakout</a></li>
+      <li class=""><a href="#" data-preview="frogger">Frogger</a></li>
+      <li class=""><a href="#" data-preview="kong">Kong</a></li>
+      <li class=""><a href="#" data-preview="platformer">Platformer</a></li>
+      <li class=""><a href="#" data-preview="pong">Pong</a></li>
+      <li class=""><a href="#" data-preview="racer">Racer</a></li>
+      <li class=""><a href="#" data-preview="snake">Snake</a></li>
+    </ul>
+  </div>
+  <div class="preview-panels">
+<div class="preview-panel" data-preview="asteroids" style="">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/asteroids.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="breakout" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/breakout.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="frogger" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/frogger.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="kong" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/kong.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="platformer" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/platformer.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="pong" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/pong.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="racer" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/racer.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+<div class="preview-panel" data-preview="snake" style="display:none;">
+  <video controls preload="metadata" playsinline loop muted
+         src="static/videos/snake.mp4"
+         style="max-width:520px; width:100%; margin:auto; display:block; border-radius:8px; background:#000;">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+  </div>
+</div>
+<script>
+(function() {
+  var g = document.currentScript.parentNode.querySelector(".preview-gallery");
+  if (!g) return;
+  var tabs = g.querySelectorAll(".tabs li");
+  var panels = g.querySelectorAll(".preview-panel");
+  tabs.forEach(function(tab) {
+    tab.querySelector("a").addEventListener("click", function(e) {
+      e.preventDefault();
+      var target = tab.querySelector("a").getAttribute("data-preview");
+      tabs.forEach(function(t) { t.classList.remove("is-active"); });
+      tab.classList.add("is-active");
+      panels.forEach(function(p) {
+        var on = p.getAttribute("data-preview") === target;
+        p.style.display = on ? "" : "none";
+        var v = p.querySelector("video");
+        if (v) { if (on) { v.play().catch(function(){}); } else { v.pause(); } }
+      });
+    });
+  });
+})();
+</script>
+        <!-- END: data_preview -->
+      <p class="caption" style="margin-top: 0.75rem;">
+        Each clip is a short rollout recorded from the game simulator. Every frame shown is directly derivable from the structured entity state stored in the released Parquet files.
+      </p>
+    </div>
+  </section>
+
+  <!-- Models -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Baseline Models</h2>
+      <p class="has-text-centered" style="margin-bottom: 2rem;">
+        Four diverse architectures covering the major paradigms in generative world modeling.
+      </p>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="model-card">
+            <h4>Dreamer</h4>
+            <p>Continuous, recurrent world model based on DreamerV3-style RSSM with discrete categorical latent space (32&times;32).</p>
+            <div class="tag-row">
+              <span class="tag is-info is-light">Continuous</span>
+              <span class="tag is-primary is-light">Recurrent</span>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="model-card">
+            <h4>AR-Transformer</h4>
+            <p>Autoregressive Transformer with temporal context encoder for continuous entity state prediction.</p>
+            <div class="tag-row">
+              <span class="tag is-info is-light">Continuous</span>
+              <span class="tag is-warning is-light">Attention</span>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="model-card">
+            <h4>D3PM</h4>
+            <p>Discrete Denoising Diffusion Probabilistic Model with temporal cross-attention for structured state prediction.</p>
+            <div class="tag-row">
+              <span class="tag is-success is-light">Discrete</span>
+              <span class="tag is-danger is-light">Diffusion</span>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="model-card">
+            <h4>MaskGIT</h4>
+            <p>Masked Generative Transformer with iterative parallel decoding for discrete token-based world modeling.</p>
+            <div class="tag-row">
+              <span class="tag is-success is-light">Discrete</span>
+              <span class="tag is-link is-light">Masked</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evaluation Protocol -->
+  <section class="section" id="evaluation-protocol" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Evaluation Protocol</h2>
+
+      <h3 class="title is-5" style="margin-top: 1.5rem;">Three evaluation modes</h3>
+      <div class="columns is-centered">
+        <div class="column is-4">
+          <div class="metric-box">
+            <div class="metric-label">Teacher-forced ($h = 1$)</div>
+            <p class="is-size-7" style="margin-top: 0.5rem;">Model receives ground-truth $s_{t}$ and predicts $\hat{s}_{t+1}$. Isolates single-step dynamics accuracy from error accumulation.</p>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="metric-box">
+            <div class="metric-label">Open-loop rollout ($h > 1$)</div>
+            <p class="is-size-7" style="margin-top: 0.5rem;">Given $s_{0}$ and a recorded action sequence, predict $(\hat{s}_{1}, \ldots, \hat{s}_{T})$ autoregressively at $h \in \{10, 20\}$. Measures error compounding.</p>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="metric-box">
+            <div class="metric-label">Scenario tests</div>
+            <p class="is-size-7" style="margin-top: 0.5rem;">Per-game probes of whether the model learns game rules (collision, scoring, terminal). Controlled initial state + deterministic action sequence; predictions checked against ground truth.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="title is-5" style="margin-top: 2rem;">Per-horizon composite</h3>
+      <div class="explainer">
+        <p>At each horizon $h$ we measure two quantities:</p>
+        <ul style="margin-top: 0.25rem;">
+          <li><strong>Position L1</strong> &mdash; mean $L_{1}$ error on mutable entity positions (normalized to $[0, 1]$; lower is better).</li>
+          <li><strong>Alive F1</strong> &mdash; $F_{1}$ score on the entity alive/dead flag (higher is better).</li>
+        </ul>
+        <p style="margin-top: 0.6rem; text-align: center;">$c_{h} = 0.9\,(1 - \text{PositionL1}_{h}) + 0.1\,\text{AliveF1}_{h}$</p>
+        <p>Position L1 carries the dominant dynamical signal; Alive F1 guards against trivial solutions that predict every entity as alive.</p>
+      </div>
+
+      <h3 class="title is-5" style="margin-top: 2rem;">Final score</h3>
+      <div class="explainer">
+        <p><strong>Test score:</strong> $S_{\text{test}} = 0.1\,c_{1} + 0.2\,c_{10} + 0.7\,c_{20}$</p>
+        <p><strong>Scenario score:</strong> $S_{\text{scenario}} = 0.1\,c_{1} + 0.2\,c_{10} + 0.7\,c_{h_{\text{end}}}$</p>
+        <p>Both formulas share the same per-horizon composite $c_{h}$; they differ only in the long-horizon term. The scenario score evaluates at the full episode length ($h_{\text{end}}$) rather than at a truncated 20-step horizon, tightening the test on long-horizon rule consistency. During a session the agent sees the test-style validation score to guide search; after the session, both formulas are recomputed on their respective held-out splits.</p>
+      </div>
+
+      <h3 class="title is-5" style="margin-top: 2rem;">Data splits: test and scenario</h3>
+      <div class="explainer">
+        <p>Trajectories are partitioned into <em>training</em>, <em>validation</em>, <em>test</em>, and <em>scenario</em> splits. Agents have read-only access to training and validation during their session; test and scenario are held out and used only for post-session evaluation. The best checkpoint is selected by validation performance and evaluated exactly once on each held-out split.</p>
+        <p><strong>Test score.</strong> Final score recomputed on held-out i.i.d.&nbsp;trajectories drawn from the same distribution as training. This is the primary headline number throughout the paper.</p>
+        <p><strong>Scenario score.</strong> Formula above applied to a hand-curated suite of 60 scenario groups across the 8 games (1,860 episodes). Each scenario constructs a controlled initial state that isolates a specific game rule &mdash; e.g. ball&ndash;paddle collision, frog drowning, bullet wrapping &mdash; and pairs it with a deterministic action sequence.</p>
+        <p><strong>Why both.</strong> Test score measures distributional fit; scenario score measures whether the model captures mechanics that matter for planning at full episode length. Across the 64 agent sessions, the two lifts agree in direction on 55&nbsp;/&nbsp;64 tasks ($r = 0.89$).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Results Matrix (Paper Table 2) -->
+  <section class="section" id="table2" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Main Results</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        Per-(game, starter) held-out lift on test <em>and</em> scenario splits, with per-agent columns.
+        Mirrors Table&nbsp;2 of the paper.
+      </p>
+      <div class="table-container">
+        <!-- BEGIN: cell_matrix_table -->
+        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth cell-matrix">
+          <thead>
+            <tr>
+              <th rowspan="2">Game</th>
+              <th rowspan="2">Starter</th>
+              <th colspan="2">Starter (test)</th>
+              <th colspan="2">Best (test)</th>
+              <th colspan="2">$\Delta$ test</th>
+              <th colspan="2">$\Delta$ scenario</th>
+            </tr>
+            <tr>
+              <th>Opus</th><th>Codex</th>
+              <th>Opus</th><th>Codex</th>
+              <th>Opus</th><th>Codex</th>
+              <th>Opus</th><th>Codex</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="4"><strong>Asteroids</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.09</td>
+              <td class="rnumber">0.09</td>
+              <td class="rnumber">0.69</td>
+              <td class="rnumber">0.71</td>
+              <td class="rnumber" style="background-color:#3b83bd">+0.60</td>
+              <td class="rnumber" style="background-color:#3781bc">+0.61</td>
+              <td class="rnumber" style="background-color:#ca975f">+0.42</td>
+              <td class="rnumber" style="background-color:#c9955c">+0.43</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.10</td>
+              <td class="rnumber">0.10</td>
+              <td class="rnumber">0.70</td>
+              <td class="rnumber">0.68</td>
+              <td class="rnumber" style="background-color:#3982bd">+0.60</td>
+              <td class="rnumber" style="background-color:#3e86bf">+0.59</td>
+              <td class="rnumber" style="background-color:#c38a4b">+0.47</td>
+              <td class="rnumber" style="background-color:#c8935a">+0.43</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.32</td>
+              <td class="rnumber">0.30</td>
+              <td class="rnumber">0.52</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber" style="background-color:#bcd5e8">+0.20</td>
+              <td class="rnumber" style="background-color:#90b9da">+0.34</td>
+              <td class="rnumber" style="background-color:#e4cbaf">+0.21</td>
+              <td class="rnumber" style="background-color:#d7b289">+0.31</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.38</td>
+              <td class="rnumber">0.33</td>
+              <td class="rnumber">0.55</td>
+              <td class="rnumber">0.46</td>
+              <td class="rnumber" style="background-color:#c9dded">+0.16</td>
+              <td class="rnumber" style="background-color:#d3e3f0">+0.13</td>
+              <td class="rnumber" style="background-color:#e5cdb2">+0.20</td>
+              <td class="rnumber" style="background-color:#ebd8c3">+0.16</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Breakout</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.94</td>
+              <td class="rnumber">0.94</td>
+              <td class="rnumber">0.97</td>
+              <td class="rnumber">0.97</td>
+              <td class="rnumber" style="background-color:#f6f9fc">+0.03</td>
+              <td class="rnumber" style="background-color:#f5f8fb">+0.03</td>
+              <td class="rnumber" style="background-color:#f3e9dd">+0.09</td>
+              <td class="rnumber" style="background-color:#f5ece1">+0.08</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.73</td>
+              <td class="rnumber">0.69</td>
+              <td class="rnumber">0.99</td>
+              <td class="rnumber">0.98</td>
+              <td class="rnumber" style="background-color:#aacae3">+0.26</td>
+              <td class="rnumber" style="background-color:#a1c4df">+0.29</td>
+              <td class="rnumber" style="background-color:#c69156">+0.44</td>
+              <td class="rnumber" style="background-color:#d7b086">+0.31</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.66</td>
+              <td class="rnumber">0.65</td>
+              <td class="rnumber">0.66</td>
+              <td class="rnumber">0.68</td>
+              <td class="rnumber" style="background-color:#ecb9cd">-0.00</td>
+              <td class="rnumber" style="background-color:#f6f9fc">+0.03</td>
+              <td class="rnumber" style="background-color:#fefefd">+0.00</td>
+              <td class="rnumber" style="background-color:#fbf7f4">+0.03</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.59</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber">0.66</td>
+              <td class="rnumber">0.98</td>
+              <td class="rnumber" style="background-color:#e8f0f7">+0.07</td>
+              <td class="rnumber" style="background-color:#88b4d7">+0.36</td>
+              <td class="rnumber" style="background-color:#f4e9de">+0.09</td>
+              <td class="rnumber" style="background-color:#d7b188">+0.31</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Frogger</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.69</td>
+              <td class="rnumber">0.71</td>
+              <td class="rnumber">0.74</td>
+              <td class="rnumber">0.78</td>
+              <td class="rnumber" style="background-color:#f0f5fa">+0.05</td>
+              <td class="rnumber" style="background-color:#e7f0f7">+0.07</td>
+              <td class="rnumber" style="background-color:#ecdbc8">+0.14</td>
+              <td class="rnumber" style="background-color:#fefdfc">+0.01</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.24</td>
+              <td class="rnumber">0.41</td>
+              <td class="rnumber">0.72</td>
+              <td class="rnumber">0.75</td>
+              <td class="rnumber" style="background-color:#629ccb">+0.48</td>
+              <td class="rnumber" style="background-color:#8fb8da">+0.34</td>
+              <td class="rnumber" style="background-color:#c79257">+0.44</td>
+              <td class="rnumber" style="background-color:#dab790">+0.29</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.65</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber">0.72</td>
+              <td class="rnumber">0.67</td>
+              <td class="rnumber" style="background-color:#e7f0f7">+0.07</td>
+              <td class="rnumber" style="background-color:#f3f8fb">+0.03</td>
+              <td class="rnumber" style="background-color:#f5ede3">+0.07</td>
+              <td class="rnumber" style="background-color:#efe1d0">+0.12</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.67</td>
+              <td class="rnumber">0.66</td>
+              <td class="rnumber">0.73</td>
+              <td class="rnumber">0.93</td>
+              <td class="rnumber" style="background-color:#e8f1f7">+0.07</td>
+              <td class="rnumber" style="background-color:#a3c5e0">+0.28</td>
+              <td class="rnumber" style="background-color:#f6eee6">+0.06</td>
+              <td class="rnumber" style="background-color:#debe9b">+0.26</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Kong</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.50</td>
+              <td class="rnumber">0.78</td>
+              <td class="rnumber">0.83</td>
+              <td class="rnumber">0.84</td>
+              <td class="rnumber" style="background-color:#93bbdb">+0.33</td>
+              <td class="rnumber" style="background-color:#ebf2f8">+0.06</td>
+              <td class="rnumber" style="background-color:#cc9c67">+0.40</td>
+              <td class="rnumber" style="background-color:#e1c5a7">+0.23</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.59</td>
+              <td class="rnumber">0.37</td>
+              <td class="rnumber">0.78</td>
+              <td class="rnumber">0.84</td>
+              <td class="rnumber" style="background-color:#c2d9eb">+0.18</td>
+              <td class="rnumber" style="background-color:#629ccb">+0.48</td>
+              <td class="rnumber" style="background-color:#e4cbaf">+0.21</td>
+              <td class="rnumber" style="background-color:#d6af85">+0.32</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.47</td>
+              <td class="rnumber">0.49</td>
+              <td class="rnumber">0.61</td>
+              <td class="rnumber">0.96</td>
+              <td class="rnumber" style="background-color:#d1e2ef">+0.14</td>
+              <td class="rnumber" style="background-color:#669ecc">+0.47</td>
+              <td class="rnumber" style="background-color:#ebd8c3">+0.16</td>
+              <td class="rnumber" style="background-color:#dab891">+0.29</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.50</td>
+              <td class="rnumber">0.48</td>
+              <td class="rnumber">0.57</td>
+              <td class="rnumber">0.61</td>
+              <td class="rnumber" style="background-color:#e8f0f7">+0.07</td>
+              <td class="rnumber" style="background-color:#d6e5f1">+0.12</td>
+              <td class="rnumber" style="background-color:#f2e6d8">+0.10</td>
+              <td class="rnumber" style="background-color:#eddcc9">+0.14</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Platformer</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.95</td>
+              <td class="rnumber">0.92</td>
+              <td class="rnumber">0.96</td>
+              <td class="rnumber">0.96</td>
+              <td class="rnumber" style="background-color:#fdfdfe">+0.01</td>
+              <td class="rnumber" style="background-color:#f1f6fa">+0.04</td>
+              <td class="rnumber" style="background-color:#fefdfc">+0.01</td>
+              <td class="rnumber" style="background-color:#f4eadf">+0.08</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.72</td>
+              <td class="rnumber">0.73</td>
+              <td class="rnumber">0.96</td>
+              <td class="rnumber">0.85</td>
+              <td class="rnumber" style="background-color:#b0cde4">+0.24</td>
+              <td class="rnumber" style="background-color:#d8e6f2">+0.12</td>
+              <td class="rnumber" style="background-color:#cc9b66">+0.40</td>
+              <td class="rnumber" style="background-color:#e8d3bb">+0.18</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber">0.97</td>
+              <td class="rnumber">0.97</td>
+              <td class="rnumber" style="background-color:#8bb6d8">+0.35</td>
+              <td class="rnumber" style="background-color:#93bbdb">+0.33</td>
+              <td class="rnumber" style="background-color:#e4caae">+0.21</td>
+              <td class="rnumber" style="background-color:#e0c3a2">+0.24</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.59</td>
+              <td class="rnumber">0.59</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber" style="background-color:#f6f9fc">+0.03</td>
+              <td class="rnumber" style="background-color:#f5f9fb">+0.03</td>
+              <td class="rnumber" style="background-color:#fefefe">+0.00</td>
+              <td class="rnumber" style="background-color:#fdfbf9">+0.01</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Pong</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.88</td>
+              <td class="rnumber">0.88</td>
+              <td class="rnumber">0.95</td>
+              <td class="rnumber">0.95</td>
+              <td class="rnumber" style="background-color:#e7f0f7">+0.07</td>
+              <td class="rnumber" style="background-color:#e7f0f7">+0.07</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.00</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.03</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.76</td>
+              <td class="rnumber">0.85</td>
+              <td class="rnumber">0.88</td>
+              <td class="rnumber">0.87</td>
+              <td class="rnumber" style="background-color:#d9e7f2">+0.11</td>
+              <td class="rnumber" style="background-color:#fafcfd">+0.01</td>
+              <td class="rnumber" style="background-color:#debf9e">+0.25</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.00</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.77</td>
+              <td class="rnumber">0.76</td>
+              <td class="rnumber">0.80</td>
+              <td class="rnumber">0.79</td>
+              <td class="rnumber" style="background-color:#f5f9fb">+0.03</td>
+              <td class="rnumber" style="background-color:#f3f7fb">+0.04</td>
+              <td class="rnumber" style="background-color:#f9f4ef">+0.04</td>
+              <td class="rnumber" style="background-color:#f9f5ef">+0.04</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.68</td>
+              <td class="rnumber">0.76</td>
+              <td class="rnumber">0.98</td>
+              <td class="rnumber">0.95</td>
+              <td class="rnumber" style="background-color:#9ec2df">+0.29</td>
+              <td class="rnumber" style="background-color:#bfd6e9">+0.20</td>
+              <td class="rnumber" style="background-color:#dfc2a1">+0.25</td>
+              <td class="rnumber" style="background-color:#efe1d1">+0.12</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Racer</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.68</td>
+              <td class="rnumber">0.69</td>
+              <td class="rnumber">0.71</td>
+              <td class="rnumber">0.75</td>
+              <td class="rnumber" style="background-color:#f3f7fb">+0.04</td>
+              <td class="rnumber" style="background-color:#eaf2f8">+0.06</td>
+              <td class="rnumber" style="background-color:#fefefd">+0.00</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.02</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.50</td>
+              <td class="rnumber">0.53</td>
+              <td class="rnumber">0.74</td>
+              <td class="rnumber">0.73</td>
+              <td class="rnumber" style="background-color:#afcde4">+0.24</td>
+              <td class="rnumber" style="background-color:#bcd5e9">+0.20</td>
+              <td class="rnumber" style="background-color:#dbb892">+0.28</td>
+              <td class="rnumber" style="background-color:#e9d5bf">+0.17</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber" style="background-color:#f8fafc">+0.02</td>
+              <td class="rnumber" style="background-color:#fafcfd">+0.01</td>
+              <td class="rnumber" style="background-color:#faf6f2">+0.03</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.03</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.62</td>
+              <td class="rnumber">0.61</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber">0.63</td>
+              <td class="rnumber" style="background-color:#f7fafc">+0.02</td>
+              <td class="rnumber" style="background-color:#f8fbfc">+0.02</td>
+              <td class="rnumber" style="background-color:#fcfaf7">+0.02</td>
+              <td class="rnumber" style="background-color:#fcf9f6">+0.02</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>Snake</strong></td>
+              <td>Dreamer</td>
+              <td class="rnumber">0.10</td>
+              <td class="rnumber">0.10</td>
+              <td class="rnumber">0.61</td>
+              <td class="rnumber">0.64</td>
+              <td class="rnumber" style="background-color:#5896c7">+0.51</td>
+              <td class="rnumber" style="background-color:#4e90c4">+0.54</td>
+              <td class="rnumber" style="background-color:#d1a677">+0.36</td>
+              <td class="rnumber" style="background-color:#c69055">+0.44</td>
+            </tr>
+            <tr>
+              
+              <td>AR-Transformer</td>
+              <td class="rnumber">0.10</td>
+              <td class="rnumber">0.10</td>
+              <td class="rnumber">0.59</td>
+              <td class="rnumber">0.83</td>
+              <td class="rnumber" style="background-color:#5e9ac9">+0.49</td>
+              <td class="rnumber" style="background-color:#1a6fb3">+0.74</td>
+              <td class="rnumber" style="background-color:#d0a371">+0.37</td>
+              <td class="rnumber" style="background-color:#c89359">+0.43</td>
+            </tr>
+            <tr>
+              
+              <td>D3PM</td>
+              <td class="rnumber">0.47</td>
+              <td class="rnumber">0.50</td>
+              <td class="rnumber">0.53</td>
+              <td class="rnumber">0.54</td>
+              <td class="rnumber" style="background-color:#edf4f9">+0.05</td>
+              <td class="rnumber" style="background-color:#f2f7fb">+0.04</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.01</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.00</td>
+            </tr>
+            <tr>
+              
+              <td>MaskGIT</td>
+              <td class="rnumber">0.50</td>
+              <td class="rnumber">0.43</td>
+              <td class="rnumber">0.53</td>
+              <td class="rnumber">0.48</td>
+              <td class="rnumber" style="background-color:#f4f8fb">+0.03</td>
+              <td class="rnumber" style="background-color:#eef4f9">+0.05</td>
+              <td class="rnumber" style="background-color:#cec2e7">-0.15</td>
+              <td class="rnumber" style="background-color:#fefefe">+0.00</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- END: cell_matrix_table -->
+      </div>
+      <p class="caption">
+        Each (game, starter) row shows the starter score and the agent-best score separately for Opus-4.6 and Codex-5.4, because each agent sees its own starter re-run on the shared host (platform non-determinism; see paper &sect;C.7).
+        <strong>$\Delta$ test</strong> is weighted $0.1\,c_{1} + 0.2\,c_{10} + 0.7\,c_{20}$, blue&nbsp;(+)&nbsp;/&nbsp;crimson&nbsp;(&ndash;).
+        <strong>$\Delta$ scenario</strong> is the same formula with $c_{h_{\text{end}}}$ in place of $c_{20}$, amber&nbsp;(+)&nbsp;/&nbsp;violet&nbsp;(&ndash;).
+      </p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Head-to-head -->
+  <section class="section" id="head-to-head">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Opus vs. Codex</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        Per-task scatter of agent-best composite: Codex on the x-axis, Opus on the y-axis. Points on the diagonal indicate a tie.
+      </p>
+      <div class="figure" style="width: 55%;">
+        <img src="static/figures/web_head_to_head.png" alt="Opus vs Codex" style="width: 100%;">
+      </div>
+      <p class="caption">Win split at the task level: Codex 19, Opus 13 (paired Wilcoxon <em>p = 0.15</em>).</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Horizon breakdown -->
+  <section class="section" id="horizon">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Long-Horizon Gains</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        Decomposing the mean test composite across the three rollout horizons. Starter is already strong at $h=1$; almost all of the agent's uplift comes from $h=10$ and $h=20$.
+      </p>
+      <div>
+          <div class="table-container compact">
+            <table class="table compact is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+              <thead>
+                <tr><th>Horizon</th><th>Starter</th><th>Agent best</th><th>$\Delta$</th></tr>
+              </thead>
+              <tbody>
+                <!-- BEGIN: horizon_table -->
+            <tr>
+              <td><strong>$h=1$</strong></td>
+              <td class="rnumber">0.813</td>
+              <td class="rnumber">0.864</td>
+              <td class="rnumber" style="background-color:#dde9f3">+0.05</td>
+            </tr>
+            <tr>
+              <td><strong>$h=10$</strong></td>
+              <td class="rnumber">0.578</td>
+              <td class="rnumber">0.788</td>
+              <td class="rnumber" style="background-color:#76a8d1">+0.21</td>
+            </tr>
+            <tr>
+              <td><strong>$h=20$</strong></td>
+              <td class="rnumber">0.488</td>
+              <td class="rnumber">0.737</td>
+              <td class="rnumber" style="background-color:#5b98c8">+0.25</td>
+            </tr>
+        <!-- END: horizon_table -->
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <p class="caption">Starter vs. agent-best mean composite at each evaluation horizon.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Per-game uplift -->
+  <section class="section" id="per-game" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Per-Game Uplift</h2>
+      <div class="figure">
+        <img src="static/figures/web_per_game_uplift.png" alt="Per-game uplift" style="width: 100%;">
+      </div>
+      <p class="caption">Mean $\Delta$ test score across the four starter architectures, per game and agent.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Scenario gallery -->
+  <section class="section" id="scenarios">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Per-Game Scenario Suite</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        60 scenario groups across the 8 games (1,860 episodes). Each panel shows per-scenario starter &rarr; agent-best composite.
+      </p>
+      <!-- BEGIN: scenario_gallery -->
+<div class="scenario-gallery">
+  <div class="tabs is-centered is-toggle is-small">
+    <ul>
+      <li class="is-active"><a href="#" data-scenario="asteroids">Asteroids</a></li>
+      <li class=""><a href="#" data-scenario="breakout">Breakout</a></li>
+      <li class=""><a href="#" data-scenario="frogger">Frogger</a></li>
+      <li class=""><a href="#" data-scenario="kong">Kong</a></li>
+      <li class=""><a href="#" data-scenario="platformer">Platformer</a></li>
+      <li class=""><a href="#" data-scenario="pong">Pong</a></li>
+      <li class=""><a href="#" data-scenario="racer">Racer</a></li>
+      <li class=""><a href="#" data-scenario="snake">Snake</a></li>
+    </ul>
+  </div>
+  <div class="scenario-panels">
+<div class="scenario-panel" data-scenario="asteroids" style="">
+  <img src="static/figures/scenario_asteroids.png" alt="Asteroids scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="breakout" style="display:none;">
+  <img src="static/figures/scenario_breakout.png" alt="Breakout scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="frogger" style="display:none;">
+  <img src="static/figures/scenario_frogger.png" alt="Frogger scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="kong" style="display:none;">
+  <img src="static/figures/scenario_kong.png" alt="Kong scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="platformer" style="display:none;">
+  <img src="static/figures/scenario_platformer.png" alt="Platformer scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="pong" style="display:none;">
+  <img src="static/figures/scenario_pong.png" alt="Pong scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="racer" style="display:none;">
+  <img src="static/figures/scenario_racer.png" alt="Racer scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+<div class="scenario-panel" data-scenario="snake" style="display:none;">
+  <img src="static/figures/scenario_snake.png" alt="Snake scenarios" style="width:100%; max-width:900px; margin:auto; display:block;">
+</div>
+  </div>
+</div>
+<script>
+(function() {
+  var gallery = document.currentScript.parentNode.querySelector(".scenario-gallery");
+  if (!gallery) return;
+  var tabs = gallery.querySelectorAll(".tabs li");
+  var panels = gallery.querySelectorAll(".scenario-panel");
+  tabs.forEach(function(tab) {
+    tab.querySelector("a").addEventListener("click", function(e) {
+      e.preventDefault();
+      var target = tab.querySelector("a").getAttribute("data-scenario");
+      tabs.forEach(function(t) { t.classList.remove("is-active"); });
+      tab.classList.add("is-active");
+      panels.forEach(function(p) {
+        p.style.display = (p.getAttribute("data-scenario") === target) ? "" : "none";
+      });
+    });
+  });
+})();
+</script>
+        <!-- END: scenario_gallery -->
+      <p class="caption">Each scenario constructs a controlled initial state that isolates a specific game mechanic (collision, scoring, terminal transition) and applies a deterministic action sequence.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Winning-edit taxonomy -->
+  <section class="section" id="taxonomy" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">What Wins? Taxonomy of Winning Edits</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        Every session winner is classified against the starter by a zero-shot judge. <strong>91%</strong> of winners are non-trivial research-style edits (new objective, loss, rollout, architecture, data augmentation, or a combination), not hyperparameter tweaks.
+      </p>
+      <div class="taxonomy-table-wrap">
+          <div class="table-container compact">
+            <table class="table compact is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+              <thead>
+                <tr><th>Label</th><th>Winners</th><th>Share</th><th></th></tr>
+              </thead>
+              <tbody>
+                <!-- BEGIN: winning_edit_taxonomy -->
+            <tr>
+              <td class="label-name nontrivial">ROLLOUT</td>
+              <td class="rnumber">9</td>
+              <td class="rnumber">14.1%</td>
+              <td><div class="bar" style="width:35.2px; background-color:#5b8ecf;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name nontrivial">LOSS</td>
+              <td class="rnumber">18</td>
+              <td class="rnumber">28.1%</td>
+              <td><div class="bar" style="width:70.3px; background-color:#5b8ecf;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name nontrivial">ARCHITECTURE</td>
+              <td class="rnumber">11</td>
+              <td class="rnumber">17.2%</td>
+              <td><div class="bar" style="width:43.0px; background-color:#5b8ecf;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name nontrivial">MULTIPLE</td>
+              <td class="rnumber">4</td>
+              <td class="rnumber">6.2%</td>
+              <td><div class="bar" style="width:15.6px; background-color:#5b8ecf;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name nontrivial">DATA_AUG</td>
+              <td class="rnumber">6</td>
+              <td class="rnumber">9.4%</td>
+              <td><div class="bar" style="width:23.4px; background-color:#5b8ecf;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name nontrivial">INFERENCE</td>
+              <td class="rnumber">10</td>
+              <td class="rnumber">15.6%</td>
+              <td><div class="bar" style="width:39.1px; background-color:#5b8ecf;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name trivial">HYPERPARAM</td>
+              <td class="rnumber">6</td>
+              <td class="rnumber">9.4%</td>
+              <td><div class="bar" style="width:23.4px; background-color:#d9b890;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name trivial">BUGFIX</td>
+              <td class="rnumber">0</td>
+              <td class="rnumber">0.0%</td>
+              <td><div class="bar" style="width:0.0px; background-color:#d9b890;">&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td class="label-name trivial">INFRA</td>
+              <td class="rnumber">0</td>
+              <td class="rnumber">0.0%</td>
+              <td><div class="bar" style="width:0.0px; background-color:#d9b890;">&nbsp;</div></td>
+            </tr>
+        <!-- END: winning_edit_taxonomy -->
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <div class="figure" style="margin-top: 1.5rem; width: 95%;">
+        <img src="static/figures/web_label_uplift.png" alt="Label uplift heatmap" style="width: 100%;">
+      </div>
+      <p class="caption">HYPERPARAM / BUGFIX / INFRA are counted as trivial; all other labels are non-trivial. Below: per-label uplift across the 1,335 classified experiments.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Session progress -->
+  <section class="section" id="session-progress">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Session Progress</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        Best-so-far validation composite over the course of each 6-hour session, per (game, starter). Curves are step functions that only change when a new best is found. Held-out test scores are computed once at session end on the validation-selected checkpoint.
+      </p>
+      <div class="figure" style="width: 95%;">
+        <img src="static/figures/web_session_progress.png" alt="Session progress grid" style="width: 100%;">
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Compute budget -->
+  <section class="section" id="compute" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Compute Budget</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        Number of experiments each agent completed per 6-hour session, aggregated across the 32 shared tasks. The per-experiment training cap is 600&nbsp;s; the per-session wall clock is 6&nbsp;h.
+      </p>
+      <div class="table-container">
+        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style="max-width: 720px; margin: auto;">
+          <thead>
+            <tr><th>Agent</th><th>Total experiments</th><th>Mean/session</th><th>Median/session</th><th>Range</th></tr>
+          </thead>
+          <tbody>
+            <!-- BEGIN: compute_budget_row -->
+            <tr>
+              <td><strong>Opus-4.6</strong></td>
+              <td class="rnumber">753</td>
+              <td class="rnumber">23.5</td>
+              <td class="rnumber">25</td>
+              <td class="rnumber">12-28</td>
+            </tr>
+            <tr>
+              <td><strong>Codex-5.4</strong></td>
+              <td class="rnumber">582</td>
+              <td class="rnumber">18.2</td>
+              <td class="rnumber">19</td>
+              <td class="rnumber">9-25</td>
+            </tr>
+        <!-- END: compute_budget_row -->
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">Opus runs more experiments per session because it persists natively across iterations; Codex&apos;s exec mode is wrapped in a restart loop (paper &sect;D.2). Both receive the same 6-hour budget.</p>
+    </div>
+  </section>
+
+  <!-- Dataset Stats -->
+  <section class="section" style="background-color: #fafafa;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Dataset Statistics</h2>
+      <p class="has-text-centered" style="margin-bottom: 1.5rem;">
+        Each game ships 19K episodes across four splits. Trajectories are stored as Parquet files with binary NumPy tensors (per-entity state, actions, rewards, terminals) plus a per-game <code>meta.json</code>.
+      </p>
+      <div class="columns is-centered is-multiline" style="margin-top: 0.5rem;">
+        <div class="column is-2">
+          <div class="metric-box">
+            <div class="metric-value">8</div>
+            <div class="metric-label">Games</div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="metric-box">
+            <div class="metric-value">10K</div>
+            <div class="metric-label">Train / game</div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="metric-box">
+            <div class="metric-value">3K</div>
+            <div class="metric-label">Val / game</div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="metric-box">
+            <div class="metric-value">3K</div>
+            <div class="metric-label">Test / game</div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="metric-box">
+            <div class="metric-value">3K</div>
+            <div class="metric-label">Scenario / game</div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="metric-box">
+            <div class="metric-value">158M</div>
+            <div class="metric-label">Total frames</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Getting Started -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Getting Started</h2>
+      <div class="content">
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <pre style="background: #1a1a2e; color: #e0e0e0; padding: 1.5rem; border-radius: 8px; overflow-x: auto;"><code><span style="color: #7fdbca;"># Install</span>
+pip install -e .
+
+<span style="color: #7fdbca;"># Prepare data (downloads from HuggingFace Hub)</span>
+python scripts/prepare_data.py --game pong
+
+<span style="color: #7fdbca;"># Train a single task</span>
+cd tasks/pong_dreamer
+python train.py
+
+<span style="color: #7fdbca;"># Evaluate</span>
+python score.py</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" style="padding: 2rem 1.5rem;">
+    <div class="container is-max-desktop has-text-centered">
+      <p>
+        This project is licensed under the <a href="./LICENSE">BSD 3-Clause License</a>.
+      </p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

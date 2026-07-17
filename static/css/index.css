@@ -1,0 +1,366 @@
+.footer .icon-link {
+  font-size: 25px;
+  color: #000;
+}
+
+.link-block a {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.publication-title {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.publication-authors {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.publication-links {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.hero-body {
+  padding-bottom: 2rem;
+}
+
+.section {
+  padding: 2rem 1.5rem;
+}
+
+.responsive-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: rgba(215, 214, 239, 0.81);
+  color: #333;
+  font-weight: 600;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+}
+
+table {
+  font-family: Arial, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.rnumber {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.best-score {
+  font-weight: bold;
+  color: #2c6fbb;
+}
+
+.average-row {
+  background-color: #fdd9b5 !important;
+  font-weight: bold;
+}
+
+.color-rect {
+  font-weight: bold;
+  color: black;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.color-rect.apricot {
+  background-color: rgb(255, 224, 178);
+}
+
+.color-rect.lightblue {
+  background-color: rgb(173, 216, 230);
+}
+
+.color-rect.lightgreen {
+  background-color: rgb(178, 255, 178);
+}
+
+.figure {
+  margin: auto;
+  width: 80%;
+}
+
+.caption {
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gallery-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gallery-item {
+  flex-basis: 24%;
+  text-align: center;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.game-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.game-card h4 {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.game-card .game-icon {
+  font-size: 2.5rem;
+}
+
+.model-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.model-card h4 {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.model-card .tag-row {
+  margin-top: 0.5rem;
+}
+
+.architecture-diagram {
+  max-width: 100%;
+  margin: 2rem auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.metric-box {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.metric-box .metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c6fbb;
+}
+
+.metric-box .metric-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@media (max-width: 800px) {
+  th, td {
+    padding: 6px;
+    font-size: 0.9em;
+  }
+  .gallery-item {
+    flex-basis: 48%;
+  }
+}
+
+@media (max-width: 500px) {
+  th, td {
+    padding: 4px;
+    font-size: 0.8em;
+  }
+  .gallery-item {
+    flex-basis: 100%;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 800px;
+}
+
+@media screen and (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+  }
+  .table {
+    min-width: 768px;
+  }
+}
+
+/* Headline stat cards */
+.headline-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  background: white;
+  height: 100%;
+}
+.headline-big {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #c85a00;
+  line-height: 1.1;
+}
+.headline-title {
+  font-weight: 600;
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+}
+.headline-sub {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.25rem;
+  line-height: 1.25;
+}
+
+/* Cell-matrix (Table 2) extra typography */
+.cell-matrix th {
+  font-size: 0.8rem;
+  text-align: center;
+}
+.cell-matrix td {
+  font-size: 0.85rem;
+}
+
+/* Winning-edit taxonomy */
+.label-name.nontrivial {
+  color: #2c6fbb;
+  font-weight: 600;
+}
+.label-name.trivial {
+  color: #8a6a3a;
+}
+.bar {
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+/* Center the taxonomy table within its section, cap its width so the
+   label+count columns are not stretched across a wide screen. */
+.taxonomy-table-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+.taxonomy-table-wrap .table-container {
+  max-width: 560px;
+  width: 100%;
+}
+.taxonomy-table-wrap .table {
+  min-width: 0;
+}
+
+/* Subsection explainer */
+.explainer {
+  background: #f4f6f8;
+  border-left: 4px solid #c85a00;
+  padding: 0.9rem 1.1rem;
+  border-radius: 4px;
+  margin: 1rem 0 1.5rem 0;
+  font-size: 0.95rem;
+}
+.explainer p { margin-bottom: 0.5rem; }
+.explainer p:last-child { margin-bottom: 0; }
+
+/* BibTeX code block */
+pre.bibtex {
+  background: #f4f6f8;
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+/* Compact tables that sit inside .column half-width cells.
+   The global .table rule forces min-width: 800px for the wide Main Results
+   matrix; these small tables (horizon breakdown, winning-edit taxonomy)
+   should instead flex to their container so they don't scroll horizontally
+   or overlap the adjacent plot. */
+.table-container.compact {
+  overflow-x: visible;
+}
+.table-container.compact .table,
+.table.compact {
+  min-width: 0;
+  width: 100%;
+}
+@media screen and (max-width: 768px) {
+  .table-container.compact .table,
+  .table.compact {
+    min-width: 0;
+  }
+}
+
+/* Side-by-side layout: let the paired column stack under the table on
+   narrow screens so neither element overlaps its neighbour. */
+.side-by-side {
+  align-items: flex-start;
+}
+@media screen and (max-width: 900px) {
+  .side-by-side.columns {
+    flex-direction: column;
+  }
+  .side-by-side .column {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
