@@ -1,0 +1,73 @@
+# AutoWorldBench base image for agent benchmarking.
+# Provides Python, PyTorch (CUDA 12.4), tmux, and the shared lib/ infrastructure.
+# Task-specific data and workspace are mounted as volumes at runtime.
+
+FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3.11-venv \
+    python3-pip \
+    tmux \
+    git \
+    curl \
+    wget \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# Make python3.11 the default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
+# Install Node.js (needed for Claude Code agent)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python dependencies — PyTorch first (needs separate index)
+RUN pip install --no-cache-dir \
+    "torch>=2.0,<2.7" --index-url https://download.pytorch.org/whl/cu124
+
+RUN pip install --no-cache-dir \
+    "numpy>=1.24,<3" \
+    "pyyaml>=6.0" \
+    "pydantic>=2.0" \
+    "pyarrow>=14.0" \
+    "matplotlib>=3.7"
+
+# Copy shared library (read-only at runtime, but baked into image)
+COPY lib/ /opt/autoworldbench/lib/
+
+# Copy templates for agent reference
+COPY templates/ /opt/autoworldbench/templates/
+
+# Scoring script template (agents call this to evaluate)
+COPY harness/scoring_server.py /opt/autoworldbench/scoring_server.py
+
+# Non-root user for agent execution (Claude Code blocks --dangerously-skip-permissions as root)
+# UID/GID match host user so mounted auth files (AWS SSO cache etc.) are readable.
+# Override at build time: docker build --build-arg HOST_UID=$(id -u) ...
+ARG HOST_UID=1007
+ARG HOST_GID=1007
+RUN groupadd -g ${HOST_GID} agent 2>/dev/null || true \
+    && useradd -m -s /bin/bash -u ${HOST_UID} -g ${HOST_GID} agent \
+    && mkdir -p /workspace /experiments /data \
+    && chown -R agent:agent /workspace /experiments \
+    && mkdir -p /home/agent/.npm-global \
+    && chown -R agent:agent /home/agent
+
+# Configure npm global for non-root user
+ENV NPM_CONFIG_PREFIX=/home/agent/.npm-global
+ENV PATH=/home/agent/.npm-global/bin:$PATH
+
+# Working directory is where the task workspace will be mounted
+WORKDIR /workspace
+USER agent
+
+# Default: start a bash shell (tmux session is created by the harness)
+CMD ["bash"]

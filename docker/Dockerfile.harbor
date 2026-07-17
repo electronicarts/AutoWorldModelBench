@@ -1,0 +1,86 @@
+# AutoWorldBench base image for Harbor agent benchmarking.
+# Provides Python, PyTorch (CUDA 12.4), tmux, and shared lib/ infrastructure.
+# Task-specific files are layered on top via per-task Dockerfiles.
+# Training data is mounted as a volume at runtime.
+
+FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3.11-venv \
+    python3-pip \
+    tmux \
+    git \
+    curl \
+    wget \
+    vim \
+    ripgrep \
+    && rm -rf /var/lib/apt/lists/*
+
+# Make python3.11 the default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
+# Install Node.js (needed for Claude Code agent)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python dependencies — PyTorch first (needs separate index)
+RUN pip install --no-cache-dir \
+    "torch>=2.0,<2.7" --index-url https://download.pytorch.org/whl/cu124
+
+RUN pip install --no-cache-dir \
+    "numpy>=1.24,<3" \
+    "pyyaml>=6.0" \
+    "pydantic>=2.0" \
+    "pyarrow>=14.0" \
+    "matplotlib>=3.7"
+
+# Copy shared library (read-only at runtime via volume override, but baked in)
+COPY lib/ /opt/autoworldbench/lib/
+
+# Copy templates for agent reference
+COPY templates/ /opt/autoworldbench/templates/
+
+# Non-root user for agent execution.
+# UID/GID match host user so mounted auth files (AWS SSO cache etc.) are readable.
+# Override at build time: docker build --build-arg HOST_UID=$(id -u) ...
+ARG HOST_UID=1007
+ARG HOST_GID=1007
+RUN groupadd -g ${HOST_GID} agent 2>/dev/null || true \
+    && useradd -m -s /bin/bash -u ${HOST_UID} -g ${HOST_GID} agent \
+    && mkdir -p /app /data /logs/agent /logs/verifier /logs/artifacts \
+    && chown -R agent:agent /app /logs \
+    && mkdir -p /home/agent/.npm-global \
+    && chown -R agent:agent /home/agent
+
+# Configure npm global for non-root user
+ENV NPM_CONFIG_PREFIX=/home/agent/.npm-global
+ENV PATH=/home/agent/.npm-global/bin:/home/agent/.local/bin:$PATH
+
+# No-op apk shim: Harbor's Claude Code agent checks `command -v apk` to decide
+# between npm install (Alpine) and curl|bash (other). The curl|bash path fails
+# under Harbor's `set -o pipefail` because the install script exits before curl
+# finishes writing. This shim makes Harbor use the npm path instead.
+RUN printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/apk && chmod +x /usr/local/bin/apk
+
+# Python path: shared lib + workspace
+ENV PYTHONPATH=/opt/autoworldbench/lib:/opt/autoworldbench:/app
+
+# Harbor convention: working directory is /app
+WORKDIR /app
+USER agent
+
+# Pre-install Claude Code via npm (matches Harbor's apk/npm install path)
+RUN npm install -g @anthropic-ai/claude-code && claude --version
+
+# Pre-install Codex CLI via npm (0.122+ needed for Azure OpenAI support)
+RUN npm install -g @openai/codex@alpha && codex --version
+
+CMD ["bash"]

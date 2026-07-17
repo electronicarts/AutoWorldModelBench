@@ -1,0 +1,19 @@
+services:
+  main:
+    runtime: nvidia
+    build:
+      context: ..
+      dockerfile: environment/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1007}
+        HOST_GID: ${HOST_GID:-1007}
+    shm_size: 8g
+    environment:
+      - PYTHONPATH=/opt/autoworldbench/lib:/opt/autoworldbench:/app/tasks/breakout_maskgit
+      - TASK_ID=breakout_maskgit
+      - GAME_ID=breakout
+      - MODEL_TYPE=maskgit
+      - MAX_TRAIN_SECONDS=600
+    volumes:
+      - ${HOME}/.aws:/home/agent/.aws:ro
+      - ${HOME}/.claude:/home/agent/.claude:ro

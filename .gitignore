@@ -1,0 +1,42 @@
+.DS_Store
+__pycache__/
+.vscode/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+*.npy
+*.npz
+data/
+outputs/
+_cache/
+/tmp/
+.ruff_cache/
+uv.lock
+
+# Autoresearch agent
+experiments/
+reports/
+tasks/*/summary.tsv
+tasks/*/comparison_plot.png
+tasks/*/configs/
+tasks/*/outputs/
+tasks/*/__pycache__/
+
+# Harbor jobs (agent runs, artifacts, trajectories)
+jobs*/
+nohup*
+results/
+logs/
+
+# Secrets
+.env
+
+# Scheduler output
+run_summary.tsv
+
+# Data
+data_cache/
+gameScenario/
+checkpoints/

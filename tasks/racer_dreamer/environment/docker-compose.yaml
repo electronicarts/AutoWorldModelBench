@@ -1,0 +1,19 @@
+services:
+  main:
+    runtime: nvidia
+    build:
+      context: ..
+      dockerfile: environment/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1007}
+        HOST_GID: ${HOST_GID:-1007}
+    shm_size: 8g
+    environment:
+      - PYTHONPATH=/opt/autoworldbench/lib:/opt/autoworldbench:/app/tasks/racer_dreamer
+      - TASK_ID=racer_dreamer
+      - GAME_ID=racer
+      - MODEL_TYPE=dreamer
+      - MAX_TRAIN_SECONDS=600
+    volumes:
+      - ${HOME}/.aws:/home/agent/.aws:ro
+      - ${HOME}/.claude:/home/agent/.claude:ro
