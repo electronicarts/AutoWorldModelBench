@@ -16,6 +16,10 @@
   font-family: 'Google Sans', sans-serif;
 }
 
+.author-block {
+  display: inline-block;
+}
+
 .publication-links {
   font-family: 'Google Sans', sans-serif;
 }
